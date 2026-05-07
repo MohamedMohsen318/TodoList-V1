@@ -24,6 +24,19 @@ Route::get('/register', [AuthController::class, 'showRegister'])
 Route::post('/register', [AuthController::class, 'register'])
     ->name('register');
 
+
+Route::view('/forgot-password', 'auth.forgot-password')
+    ->name('password.request');
+
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])
+    ->name('password.email');
+
+Route::view('/reset-password/{token}', 'auth.reset-password')
+    ->name('password.reset');
+
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])
+    ->name('password.update');;
+
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')->name('logout');
 

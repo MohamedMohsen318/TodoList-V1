@@ -48,9 +48,11 @@
                     <label class="label" for="status">Status</label>
                     <select class="select" id="status" name="status" required>
                         <option value="">Select status</option>
-                        <option value="pending" {{ old('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="in_progress" {{ old('status') === 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                        <option value="completed" {{ old('status') === 'completed' ? 'selected' : '' }}>Completed</option>
+                        @foreach (\App\Enums\TaskStatus::cases() as $status)
+                            <option value="{{ $status->value }}" {{ old('status') === $status->value ? 'selected' : '' }}>
+                                {{ $status->label() }}
+                            </option>
+                        @endforeach
                     </select>
                     @error('status')
                     <p class="error">{{ $message }}</p>

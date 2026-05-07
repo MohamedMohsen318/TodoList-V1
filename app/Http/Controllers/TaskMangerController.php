@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatus;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Enum;
 
 class TaskMangerController extends Controller
 {
     function listTask()
     {
         $tasks = Tasks::where('user_id', auth()->id())
-            ->whereIn('status', ['pending', 'in_progress'])
+            ->whereIn('status', [TaskStatus::Pending->value, TaskStatus::InProgress->value])
             ->orderBy('created_at', 'desc')
             ->paginate(3);
 
@@ -26,12 +28,14 @@ class TaskMangerController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'deadline' => 'required|date',
-            'status' => 'required|string|max:255',
+            'status' => ['required', new Enum(TaskStatus::class)],
         ]);
 
-        $data['user_id'] = auth()->id();
+        $task = Tasks::create($data + ['user_id' => auth()->id(),
+                'status' => TaskStatus::Completed,]);
 
-        $task = Tasks::create($data);
+//        $data['user_id'] = auth()->id();
+//        $task = Tasks::create($data);
 
         if ($task) {
             return redirect()->route('task.index')
@@ -44,7 +48,7 @@ class TaskMangerController extends Controller
     {
         $updated = Tasks::where('user_id', auth()->id())
             ->where('id', $id)
-            ->update(['status' => 'completed']);
+            ->update(['status' => TaskStatus::Completed->value]);
 
         if ($updated) {
             return redirect()->route('task.index')

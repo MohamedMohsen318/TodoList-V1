@@ -148,8 +148,8 @@
                                     Deadline: {{ $task->deadline }}
                                 </span>
 
-                                    <span class="badge status-{{ str_replace('_', '-', $task->status ?? 'pending') }}">
-                                    {{ ucfirst(str_replace('_', ' ', $task->status ?? 'pending')) }}
+                                    <span class="badge status-{{ str_replace('_', '-', $task->status?->value ?? 'pending') }}">
+                                    {{ $task->status?->label() ?? 'Pending' }}
                                 </span>
                                 </div>
                             </div>
