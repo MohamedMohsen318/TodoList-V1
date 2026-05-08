@@ -29,6 +29,10 @@ return [
     ],
 
     'slack' => [
+        'webhook_url' => env('SLACK_WEBHOOK_URL'),
+        'channel' => env('SLACK_CHANNEL'),
+        'username' => env('SLACK_BOT_USERNAME', env('APP_NAME', 'Laravel')),
+
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),

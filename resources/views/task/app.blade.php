@@ -12,7 +12,7 @@
         </div>
 
         <div class="panel">
-            <form action="{{ route('task.store') }}" method="POST" style="display: grid; gap: 16px;">
+            <form action="{{ route('tasks.store') }}" method="POST" style="display: grid; gap: 16px;">
                 @csrf
 
                 <div>
@@ -63,7 +63,7 @@
                     <button class="btn btn-primary" type="submit" style="flex: 1;">
                         Save Task
                     </button>
-                    <a href="{{ route('welcome') }}" class="btn btn-secondary"
+                    <a href="{{ route('user.dashboard') }}" class="btn btn-secondary"
                        style="flex: 1; text-align: center; text-decoration: none;">
                         Back
                     </a>

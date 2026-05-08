@@ -44,3 +44,22 @@ php artisan migrate
 ```bash
 php artisan serve
 ```
+
+## Slack Integration
+
+This project can send Slack updates when a task is created, completed, or deleted.
+
+1. In your Slack workspace, create an `Incoming Webhook` for the channel you want.
+2. Add these values to your `.env`:
+
+```bash
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+SLACK_CHANNEL=#your-channel-name
+SLACK_BOT_USERNAME="TodoList Bot"
+```
+
+3. Clear cached config if needed:
+
+```bash
+php artisan config:clear
+```

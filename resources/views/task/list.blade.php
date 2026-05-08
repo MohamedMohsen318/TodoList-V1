@@ -111,10 +111,10 @@
                 </div>
 
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <a href="{{ route('task.create') }}" class="btn btn-primary" style="text-decoration: none;">
+                    <a href="{{ route('tasks.create') }}" class="btn btn-primary" style="text-decoration: none;">
                         Add Task
                     </a>
-                    <a href="{{ route('welcome') }}" class="btn btn-secondary" style="text-decoration: none;">
+                    <a href="{{ route('user.dashboard') }}" class="btn btn-secondary" style="text-decoration: none;">
                         Back
                     </a>
                 </div>
@@ -155,11 +155,11 @@
                             </div>
 
                             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
-                                <a href="{{ route('task.status.update', $task->id) }}" class="btn btn-secondary" style="text-decoration: none;">
+                                <a href="{{ route('tasks.status.update', $task->id) }}" class="btn btn-secondary" style="text-decoration: none;">
                                     Update Status
                                 </a>
 
-                                <a href="{{ route('task.delet', $task->id) }}" class="btn btn-danger" style="text-decoration: none;">
+                                <a href="{{ route('tasks.delete', $task->id) }}" class="btn btn-danger" style="text-decoration: none;">
                                     Delete
                                 </a>
                             </div>

@@ -17,9 +17,19 @@
             </p>
 
             <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-                <a href="{{ route('task.create') }}" class="btn btn-primary" style="text-decoration: none;">
+                <a href="{{ route('tasks.create') }}" class="btn btn-primary" style="text-decoration: none;">
                     Add Task
                 </a>
+
+                <a href="{{ route('tasks.index') }}" class="btn btn-secondary" style="text-decoration: none;">
+                    My Tasks
+                </a>
+
+                @if(auth()->user()->can('manage-roles'))
+                    <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary" style="text-decoration: none;">
+                        Manage Roles
+                    </a>
+                @endif
 
                 <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
                     @csrf

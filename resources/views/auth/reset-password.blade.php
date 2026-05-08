@@ -13,6 +13,16 @@
                     </p>
                 </div>
 
+                <div style="padding: 14px 16px; border: 1px solid #fecaca; border-radius: 12px; background: #fff7ed; text-align: center;">
+                    <p class="helper" style="margin: 0 0 6px;">OTP countdown</p>
+                    <p style="margin: 0; font-size: 28px; font-weight: 800; color: #c2410c; letter-spacing: 2px;">
+                        03:00
+                    </p>
+                    <p class="helper" style="margin: 8px 0 0;">
+                        This OTP expires in {{ $expiryMinutes }} minutes at {{ $expiresAt->format('h:i A') }}.
+                    </p>
+                </div>
+
                 <a href="{{ $resetPassword }}" class="btn btn-primary" style="width: 100%; text-decoration: none;">
                     Reset password
                 </a>
@@ -25,8 +35,20 @@
                 </div>
             </div>
         @else
+            @php
+                $expiresAt = request('expires_at');
+            @endphp
+
             <form action="{{ route('password.update') }}" method="POST" style="display: grid; gap: 16px;">
                 @csrf
+
+                @if($expiresAt)
+                    <div id="otp-countdown-box" style="padding: 14px 16px; border: 1px solid #fed7aa; border-radius: 12px; background: #fff7ed; text-align: center;">
+                        <p class="helper" style="margin: 0 0 6px;">OTP expires in</p>
+                        <p id="otp-countdown" style="margin: 0; font-size: 28px; font-weight: 800; color: #c2410c; letter-spacing: 2px;">03:00</p>
+                        <p id="otp-countdown-note" class="helper" style="margin: 8px 0 0;">Complete the reset before the timer ends.</p>
+                    </div>
+                @endif
 
                 <div>
                     <label class="label" for="email">Email</label>
@@ -67,6 +89,49 @@
                     </a>
                 </div>
             </form>
+
+            @if($expiresAt)
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const countdown = document.getElementById('otp-countdown');
+                        const note = document.getElementById('otp-countdown-note');
+                        const submitButton = document.querySelector('button[type="submit"]');
+                        const expiresAt = new Date(@json($expiresAt));
+
+                        function renderCountdown() {
+                            const diff = expiresAt.getTime() - Date.now();
+
+                            if (diff <= 0) {
+                                countdown.textContent = '00:00';
+                                note.textContent = 'This OTP has expired. Please request a new code.';
+                                if (submitButton) {
+                                    submitButton.disabled = true;
+                                    submitButton.style.opacity = '0.6';
+                                    submitButton.style.cursor = 'not-allowed';
+                                }
+                                return false;
+                            }
+
+                            const totalSeconds = Math.floor(diff / 1000);
+                            const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+                            const seconds = String(totalSeconds % 60).padStart(2, '0');
+
+                            countdown.textContent = `${minutes}:${seconds}`;
+                            return true;
+                        }
+
+                        if (!renderCountdown()) {
+                            return;
+                        }
+
+                        const timer = setInterval(function () {
+                            if (!renderCountdown()) {
+                                clearInterval(timer);
+                            }
+                        }, 1000);
+                    });
+                </script>
+            @endif
         @endif
     </div>
 @endsection

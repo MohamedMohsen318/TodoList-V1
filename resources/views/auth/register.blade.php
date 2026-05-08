@@ -12,10 +12,10 @@
 
         <div class="auth-switch">
             <a href="{{ route('login') }}" class="auth-link">Sign in</a>
-            <a href="{{ route('showRegister') }}" class="auth-link active">Sign up</a>
+            <a href="{{ route('register.show') }}" class="auth-link active">Sign up</a>
         </div>
 
-        <form action="{{ route('register') }}" method="POST" style="display: grid; gap: 16px; margin-top: 22px;">
+        <form action="{{ route('register.store') }}" method="POST" style="display: grid; gap: 16px; margin-top: 22px;">
             @csrf
 
             <div>
@@ -30,6 +30,14 @@
                 <label class="label" for="email">Email</label>
                 <input class="input" id="email" type="email" name="email" value="{{ old('email') }}" placeholder="name@example.com" autocomplete="email" required>
                 @error('email')
+                <p class="error">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label class="label" for="phone">Phone</label>
+                <input class="input" id="phone" type="text" name="phone" value="{{ old('phone') }}" placeholder="Your phone number" autocomplete="tel">
+                @error('phone')
                 <p class="error">{{ $message }}</p>
                 @enderror
             </div>

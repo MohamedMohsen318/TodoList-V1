@@ -12,16 +12,16 @@
 
         <div class="auth-switch">
             <a href="{{ route('login') }}" class="auth-link active">Sign in</a>
-            <a href="{{ route('showRegister') }}" class="auth-link">Sign up</a>
+            <a href="{{ route('register.show') }}" class="auth-link">Sign up</a>
         </div>
 
-        <form action="{{ route('login.post') }}" method="POST" style="display: grid; gap: 16px; margin-top: 22px;">
+        <form action="{{ route('login.attempt') }}" method="POST" style="display: grid; gap: 16px; margin-top: 22px;">
             @csrf
 
             <div>
-                <label class="label" for="email">Email</label>
-                <input class="input" id="email" type="email" name="email" value="{{ old('email') }}" placeholder="name@example.com" autocomplete="email" required>
-                @error('email')
+                <label class="label" for="identifier">Email or phone</label>
+                <input class="input" id="identifier" type="text" name="identifier" value="{{ old('identifier') }}" placeholder="name@example.com or 01234567890" autocomplete="username" required>
+                @error('identifier')
                 <p class="error">{{ $message }}</p>
                 @enderror
             </div>
@@ -51,7 +51,7 @@
             <button class="btn btn-primary" type="submit" style="width: 100%;">Sign in</button>
 
             <div style="padding-top: 6px; border-top: 1px solid #e2e8f0; text-align: center;">
-                <a href="{{ route('showRegister') }}" class="helper" style="text-decoration: none; font-weight: 600;">
+                <a href="{{ route('register.show') }}" class="helper" style="text-decoration: none; font-weight: 600;">
                     Create new account
                 </a>
             </div>

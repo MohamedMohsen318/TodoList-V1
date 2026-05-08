@@ -6,11 +6,15 @@ use App\Enums\TaskStatus;
 use App\Models\Tasks;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class TaskMangerController extends Controller
 {
-    function listTask()
+    public function listTask(): View
     {
+        $this->authorize('viewAny', Tasks::class);
+
         $tasks = Tasks::where('user_id', auth()->id())
             ->whereIn('status', [TaskStatus::Pending->value, TaskStatus::InProgress->value])
             ->orderBy('created_at', 'desc')
@@ -18,12 +22,18 @@ class TaskMangerController extends Controller
 
         return view('task.list', compact('tasks'));
     }
-    function addTask(Request $request)
+
+    public function addTask(Request $request): View
     {
+        $this->authorize('create', Tasks::class);
+
         return view('task.app');
     }
-    function addTaskPost(Request $request)
+
+    public function addTaskPost(Request $request): RedirectResponse
     {
+        $this->authorize('create', Tasks::class);
+
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -32,42 +42,45 @@ class TaskMangerController extends Controller
         ]);
 
         $task = Tasks::create($data + ['user_id' => auth()->id(),
-                'status' => TaskStatus::Completed,]);
-
-//        $data['user_id'] = auth()->id();
-//        $task = Tasks::create($data);
+                'status' => $data['status'],]);
 
         if ($task) {
-            return redirect()->route('task.index')
+            return redirect()->route('tasks.index')
                 ->with('success', 'Task added successfully');
         }
 
         return back()->withErrors('Task not added');
     }
-    function updateTaskStats( $id)
+
+    public function updateTaskStats($id): RedirectResponse
     {
-        $updated = Tasks::where('user_id', auth()->id())
-            ->where('id', $id)
-            ->update(['status' => TaskStatus::Completed->value]);
+        $task = Tasks::where('user_id', auth()->id())->findOrFail($id);
+        $this->authorize('update', $task);
+
+        $updated = $task->update(['status' => TaskStatus::Completed->value]);
 
         if ($updated) {
-            return redirect()->route('task.index')
+            return redirect()->route('tasks.index')
                 ->with('success', 'Task completed');
         }
 
-        return redirect()->route('task.index')
+        return redirect()->route('tasks.index')
             ->with('error', 'Task not found or already updated');
 
     }
-    function deleteTask($id){
-        $delete = Tasks::where('user_id', auth()->id())
-            ->where('id', $id)
-            ->delete();
+
+    public function deleteTask($id): RedirectResponse
+    {
+        $task = Tasks::where('user_id', auth()->id())->findOrFail($id);
+        $this->authorize('delete', $task);
+
+        $delete = $task->delete();
+
         if($delete) {
-            return redirect()->route('task.index')
+            return redirect()->route('tasks.index')
                 ->with('success', 'Task deleted');
         }
-        return redirect()->route('task.index')
+        return redirect()->route('tasks.index')
             ->withErrors('Try Again, Task not found or already deleted');
 
     }

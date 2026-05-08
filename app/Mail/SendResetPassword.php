@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Carbon;
 
 class SendResetPassword extends Mailable
 {
@@ -19,11 +20,15 @@ class SendResetPassword extends Mailable
      */
     public $resetPassword;
     public $token;
+    public $expiresAt;
+    public $expiryMinutes;
 
-    public function __construct(string $token)
+    public function __construct(string $token, Carbon $expiresAt)
     {
         $this->token = $token;
-        $this->resetPassword = url('/reset-password/' . $token);
+        $this->expiresAt = $expiresAt;
+        $this->expiryMinutes = (int) config('auth.passwords.users.expire', 60);
+        $this->resetPassword = url('/reset-password/' . $token . '?expires_at=' . urlencode($expiresAt->toIso8601String()));
     }
 
     /**

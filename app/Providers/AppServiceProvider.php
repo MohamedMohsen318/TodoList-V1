@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Tasks;
+use App\Observers\TaskObserver;
+use App\Policies\TaskPolicy;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +28,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrap();
+        Tasks::observe(TaskObserver::class);
+
+        Gate::policy(Tasks::class, TaskPolicy::class);
+
+        Gate::before(function ($user, string $ability) {
+            return method_exists($user, 'hasRole') && $user->hasRole('super-admin') ? true : null;
+        });
     }
 }
