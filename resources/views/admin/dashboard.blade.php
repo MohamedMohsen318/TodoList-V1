@@ -31,10 +31,10 @@
 
             <div class="panel" style="margin-bottom: 18px;">
                 <h1 style="margin: 0 0 8px; font-size: 34px; font-weight: 800;">
-                    {{ $admin->hasRole('super-admin') ? 'Super Admin Dashboard' : 'Admin Dashboard' }}
+                    {{ $admin->hasRole('super_admin') ? 'Super Admin Dashboard' : 'Admin Dashboard' }}
                 </h1>
                 <p class="helper" style="margin: 0;">
-                    {{ $admin->hasRole('super-admin') ? 'You have full access to users, admins, roles, and permissions.' : 'You can manage the areas granted to your admin role.' }}
+                    {{ $admin->hasRole('super_admin') ? 'You have full access to users, admins, roles, and permissions.' : 'You can manage the areas granted to your admin role.' }}
                 </p>
             </div>
 

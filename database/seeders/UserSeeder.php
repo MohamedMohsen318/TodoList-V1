@@ -52,6 +52,6 @@ class UserSeeder extends Seeder
             ]
         );
 
-        $admin->syncRoles(['super-admin']);
+        $admin->syncRoles(['super_admin']);
     }
 }

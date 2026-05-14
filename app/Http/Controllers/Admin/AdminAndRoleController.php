@@ -94,7 +94,7 @@ class AdminAndRoleController extends Controller implements HasMiddleware
 
     public function adminsDestroy(Admin $admin): RedirectResponse
     {
-        if ($admin->hasRole('super-admin') && auth('admin')->id() !== $admin->id) {
+        if ($admin->hasRole('super_admin') && auth('admin')->id() !== $admin->id) {
             return redirect()->route('admin.admins.index')
                 ->withErrors('Super admin accounts can only be removed by themselves.');
         }

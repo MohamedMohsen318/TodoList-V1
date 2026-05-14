@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create("tasks", function (Blueprint $table) {
             $table->id();
+            $table->foreignId("user_id")->constrained()->cascadeOnDelete();
+            $table->foreignId("parent_id")->nullable()->constrained("tasks")->nullOnDelete();
             $table->string("title");
             $table->text("description");
-            $table->string("deadline");
-            $table->string("user_id");
+            $table->dateTime("deadline");
             $table->string("status")->nullable();
             $table->timestamps();
-
         });
     }
 
@@ -28,5 +26,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists("tasks");}
+        Schema::table("tasks", function (Blueprint $table) {
+            $table->dropForeign(["parent_id"]);
+            $table->dropColumn("parent_id");
+        });
+
+        Schema::dropIfExists("tasks");
+    }
 };

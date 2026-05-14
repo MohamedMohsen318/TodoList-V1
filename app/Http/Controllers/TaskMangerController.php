@@ -41,8 +41,10 @@ class TaskMangerController extends Controller
             'status' => ['required', new Enum(TaskStatus::class)],
         ]);
 
-        $task = Tasks::create($data + ['user_id' => auth()->id(),
-                'status' => $data['status'],]);
+        $task = Tasks::create($data + [
+            'user_id' => auth()->id(),
+            'status' => $data['status'],
+        ]);
 
         if ($task) {
             return redirect()->route('tasks.index')

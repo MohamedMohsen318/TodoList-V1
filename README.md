@@ -37,6 +37,7 @@ php artisan key:generate
 
 ```bash
 php artisan migrate
+php artisan db:seed
 ```
 
 4. Start the app:
@@ -44,6 +45,12 @@ php artisan migrate
 ```bash
 php artisan serve
 ```
+
+## Default Accounts (Seeded)
+
+- User: `user@user.com` / `12345678`
+- Admin: `manager@admin.com` / `12345678` (role: `admin`)
+- Super Admin: `admin@admin.com` / `12345678` (role: `super_admin`)
 
 ## Slack Integration
 

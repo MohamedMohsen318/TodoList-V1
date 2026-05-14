@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Tasks::class, TaskPolicy::class);
 
         Gate::before(function ($user, string $ability) {
-            return method_exists($user, 'hasRole') && $user->hasRole('super-admin') ? true : null;
+            return method_exists($user, 'hasRole') && $user->hasRole('super_admin') ? true : null;
         });
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -73,6 +74,8 @@ class AuthController extends Controller
 
         $user = User::create($newUser);
 
+        // Ensure the default user role exists before assigning it.
+        Role::findOrCreate('user', config('auth.defaults.guard', 'web'));
         $user->assignRole('user');
         $this->slackNotifier->sendUserRegistered($user);
 

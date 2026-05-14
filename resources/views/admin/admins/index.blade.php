@@ -8,7 +8,7 @@
             <div style="display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
                 <div>
                     <h1 style="margin: 0 0 8px; font-size: 30px; font-weight: 800;">Admins</h1>
-                    <p class="helper" style="margin: 0;">Only admin and super-admin accounts can access this page and manage admin users.</p>
+                    <p class="helper" style="margin: 0;">Only admin and super_admin accounts can access this page and manage admin users.</p>
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Dashboard</a>
