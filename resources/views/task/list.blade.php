@@ -96,6 +96,136 @@
             gap: 8px;
             flex-wrap: nowrap;
         }
+
+        .task-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 18px 18px 14px;
+            background: #ffffff;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .task-item + .task-item {
+            margin-top: 14px;
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .task-title {
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 850;
+            letter-spacing: -0.02em;
+        }
+
+        .task-desc {
+            margin: 0;
+            color: #475569;
+            line-height: 1.55;
+            max-width: 64ch;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 12px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #94a3b8;
+        }
+
+        .badge.deadline {
+            background: #fff7ed;
+            border-color: #fed7aa;
+            color: #9a3412;
+        }
+
+        .badge.status-pending {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        .badge.status-pending .dot {
+            background: #64748b;
+        }
+
+        .badge.status-in-progress {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .badge.status-in-progress .dot {
+            background: #2563eb;
+        }
+
+        .badge.status-completed {
+            background: #ecfdf5;
+            border-color: #a7f3d0;
+            color: #047857;
+        }
+
+        .badge.status-completed .dot {
+            background: #10b981;
+        }
+
+        .task-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .status-form {
+            display: inline-flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .status-form select {
+            height: 42px;
+            min-width: 170px;
+            padding: 0 12px;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .btn.btn-link-danger {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            color: #be123c;
+        }
+
+        .btn.btn-link-danger:hover {
+            filter: brightness(0.98);
+        }
     </style>
     <div class="page-center">
         <div class="card-wide">
@@ -132,34 +262,47 @@
                     @foreach($tasks as $task)
                         <div class="task-item">
 
-                            <div style="display: flex; justify-content: space-between; gap: 12px; align-items: start; flex-wrap: wrap;">
+                            <div style="display: flex; justify-content: space-between; gap: 14px; align-items: start; flex-wrap: wrap;">
                                 <div>
-                                    <h3 style="margin: 0 0 8px; font-size: 20px;">
+                                    <h3 class="task-title">
                                         {{ $task->title }}
                                     </h3>
 
-                                    <p class="helper" style="margin: 0 0 12px;">
+                                    <p class="task-desc">
                                         {{ $task->description }}
                                     </p>
                                 </div>
 
-                                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
-                                <span class="badge status-pending">
-                                    Deadline: {{ $task->deadline }}
-                                </span>
+                                <div class="task-meta">
+                                    <span class="badge deadline">
+                                        Deadline: {{ $task->deadline }}
+                                    </span>
 
-                                    <span class="badge status-{{ str_replace('_', '-', $task->status?->value ?? 'pending') }}">
-                                    {{ $task->status?->label() ?? 'Pending' }}
-                                </span>
+                                    @php($statusClass = str_replace('_', '-', $task->status?->value ?? 'pending'))
+                                    <span class="badge status-{{ $statusClass }}">
+                                        <span class="dot" aria-hidden="true"></span>
+                                        {{ $task->status?->label() ?? 'Pending' }}
+                                    </span>
                                 </div>
                             </div>
 
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
-                                <a href="{{ route('tasks.status.update', $task->id) }}" class="btn btn-secondary" style="text-decoration: none;">
-                                    Update Status
-                                </a>
+                            <div class="task-actions">
+                                <form action="{{ route('tasks.status.update', $task->id) }}" method="POST" class="status-form">
+                                    @csrf
+                                    @method('PUT')
 
-                                <a href="{{ route('tasks.delete', $task->id) }}" class="btn btn-danger" style="text-decoration: none;">
+                                    <select name="status" aria-label="Task status">
+                                        <option value="pending" @selected(($task->status?->value ?? 'pending') === 'pending')>Pending</option>
+                                        <option value="in_progress" @selected(($task->status?->value ?? 'pending') === 'in_progress')>In Progress</option>
+                                        <option value="completed" @selected(($task->status?->value ?? 'pending') === 'completed')>Completed</option>
+                                    </select>
+
+                                    <button type="submit" class="btn btn-secondary">
+                                        Update Status
+                                    </button>
+                                </form>
+
+                                <a href="{{ route('tasks.delete', $task->id) }}" class="btn btn-link-danger" style="text-decoration: none;">
                                     Delete
                                 </a>
                             </div>

@@ -52,16 +52,23 @@ class TaskMangerController extends Controller
         return back()->withErrors('Task not added');
     }
 
-    public function updateTaskStats($id): RedirectResponse
+    public function updateTaskStats(Request $request, $id): RedirectResponse
     {
         $task = Tasks::where('user_id', auth()->id())->findOrFail($id);
         $this->authorize('update', $task);
 
-        $updated = $task->update(['status' => TaskStatus::Completed->value]);
+        $status = $request->input('status', $request->query('status', TaskStatus::Completed->value));
+
+        $data = validator(
+            ['status' => $status],
+            ['status' => ['required', new Enum(TaskStatus::class)]]
+        )->validate();
+
+        $updated = $task->update(['status' => $data['status']]);
 
         if ($updated) {
             return redirect()->route('tasks.index')
-                ->with('success', 'Task completed');
+                ->with('success', 'Task status updated');
         }
 
         return redirect()->route('tasks.index')

@@ -32,7 +32,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/', [TaskMangerController::class, 'listTask'])->name('index');
         Route::get('/create', [TaskMangerController::class, 'addTask'])->name('create');
         Route::post('/', [TaskMangerController::class, 'addTaskPost'])->name('store');
-        Route::get('/{id}/status', [TaskMangerController::class, 'updateTaskStats'])->name('status.update');
+        Route::match(['get', 'put'], '/{id}/status', [TaskMangerController::class, 'updateTaskStats'])->name('status.update');
         Route::get('/{id}/delete', [TaskMangerController::class, 'deleteTask'])->name('delete');
     });
 
